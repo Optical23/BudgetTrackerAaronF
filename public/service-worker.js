@@ -65,7 +65,17 @@ self.addEventListener('activate', (e) => {
         caches.keys().then(keyList => {
             let cacheKeepList = keyList.filter(key => {
                 return key.indexOf(APP_PREFIX);
+            });
+            cacheKeepList.push(CACHE_NAME);
+  
+            return Promise.all(
+            keyList.map(function(key, i) {
+                if (cacheKeepList.indexOf(key) === -1) {
+                console.log('deleting cache : ' + keyList[i]);
+                return caches.delete(keyList[i]);
+                }
             })
+            );
         })
     )
 });
