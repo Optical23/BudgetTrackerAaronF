@@ -7,7 +7,7 @@ request.onupgradeneeded = function(e) {
     // save a reference to the database 
     const db = e.target.result;
     // create an object store (table) called `new_pizza`, set it to have an auto incrementing primary key of sorts 
-    db.createObjectStore('budge-tracker', { autoIncrement: true });
+    db.createObjectStore('newTransaction', { autoIncrement: true });
 };
 
   // upon a successful 
@@ -30,10 +30,10 @@ request.onsuccess = function(e) {
 // This function will be executed if we attempt to submit a new pizza and there's no internet connection
 function saveRecord(record) {
     // open a new transaction with the database with read and write permissions 
-    const transaction = db.transaction(['budget-data'], 'readwrite');
+    const transaction = db.transaction(['newTransaction'], 'readwrite');
   
     // access the object store for `budget-data`
-    const budgetObjectStore = transaction.objectStore('budget-data');
+    const budgetObjectStore = transaction.objectStore('newTransaction');
   
     // add record to your store with add method
     budgetObjectStore.add(record);
@@ -48,4 +48,10 @@ function uploadTransaction() {
 
     // get all records from store and set to a variable
     const getAll = budgetObjectStore.getAll();
+    //On successful getAll
+    getAll.onsuccess = function(){
+        if (getAll.result.length > 0) {
+            fetch('/api/transaction/bulk')
+        }
+    }
 }
