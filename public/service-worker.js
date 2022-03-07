@@ -2,7 +2,7 @@ const VERSION = 'v1';
 const APP_PREFIX = 'budge-tracker-'
 const CACHE_NAME = APP_PREFIX + VERSION;
 const DATA_CACHE_NAME = 'data-cache-' + VERSION;
-
+//files to cache
 const FILES_TO_CACHE = [
   '/',
   './index.html',
@@ -19,7 +19,7 @@ const FILES_TO_CACHE = [
   './icons/icon-384x384.png',
   './icons/icon-512x512.png'
 ];
-
+//installs cache files so it can go offline
 self.addEventListener('install', (e) => {
     e.waitUntil(
         caches.open(CACHE_NAME).then(function (cache) {
@@ -63,6 +63,7 @@ self.addEventListener('fetch', (e) => {
 
 self.addEventListener('activate', (e) => {
     e.waitUntil(
+        //gets keys and filters and then gets the indexOf the cache
         caches.keys().then(keyList => {
             let cacheKeepList = keyList.filter(key => {
                 return key.indexOf(APP_PREFIX);
