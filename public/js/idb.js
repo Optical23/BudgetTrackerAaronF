@@ -47,6 +47,7 @@ function uploadTransaction() {
 
     // get all records from store and set to a variable
     const getAll = budgetObjectStore.getAll();
+    console.log(getAll);
     //On successful getAll
     getAll.onsuccess = function(){
         if (getAll.result.length > 0) {
@@ -57,11 +58,11 @@ function uploadTransaction() {
                 Accept: 'application/json, text/plain, */*',
                 'Content-Type': 'application/json'
               }
-              .then(response => response.json())
-              .then(serverResponse => {
-                if (serverResponse.message) {
-                  throw new Error(serverResponse);
-                }
+            })
+              .then(response => {
+                return response.json();
+              })
+              .then(() => {
                 // open one more transaction
                 const transaction = db.transaction(['new_transaction'], 'readwrite');
                 // access the newTransaction object store
@@ -74,7 +75,6 @@ function uploadTransaction() {
               .catch(err => {
                 console.log(err);
               })
-            })
         }
     }
 }
