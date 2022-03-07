@@ -1,13 +1,12 @@
 let db;
-
-const request = indexedDB.open('budge-tracker', 1);
+const request = indexedDB.open('budge_tracker', 1);
 
 // this event will emit if the database version changes (nonexistant to version 1, v1 to v2, etc.)
 request.onupgradeneeded = function(e) {
     // save a reference to the database 
     const db = e.target.result;
     // create an object store (table) called `new_pizza`, set it to have an auto incrementing primary key of sorts 
-    db.createObjectStore('newTransaction', { autoIncrement: true });
+    db.createObjectStore('new_transaction', { autoIncrement: true });
 };
 
   // upon a successful 
@@ -30,10 +29,10 @@ request.onerror = function(e) {
 // This function will be executed if we attempt to submit a new pizza and there's no internet connection
 function saveRecord(record) {
     // open a new transaction with the database with read and write permissions 
-    const transaction = db.transaction(['newTransaction'], 'readwrite');
+    const transaction = db.transaction(['new_transaction'], 'readwrite');
   
     // access the object store for `budget-data`
-    const budgetObjectStore = transaction.objectStore('newTransaction');
+    const budgetObjectStore = transaction.objectStore('new_transaction');
   
     // add record to your store with add method
     budgetObjectStore.add(record);
@@ -41,10 +40,10 @@ function saveRecord(record) {
 
 function uploadTransaction() {
     // open a transaction on your db
-    const transaction = db.transaction(['newTransaction'], 'readwrite');
+    const transaction = db.transaction(['new_transaction'], 'readwrite');
 
     // access your object store
-    const budgetObjectStore = transaction.objectStore('newTransaction');
+    const budgetObjectStore = transaction.objectStore('new_transaction');
 
     // get all records from store and set to a variable
     const getAll = budgetObjectStore.getAll();
@@ -64,9 +63,9 @@ function uploadTransaction() {
                   throw new Error(serverResponse);
                 }
                 // open one more transaction
-                const transaction = db.transaction(['newTransaction'], 'readwrite');
+                const transaction = db.transaction(['new_transaction'], 'readwrite');
                 // access the newTransaction object store
-                const budgetObjectStore = transaction.objectStore('newTransaction');
+                const budgetObjectStore = transaction.objectStore('new_transaction');
                 // clear all items in your store
                 budgetObjectStore.clear();
       
@@ -79,3 +78,5 @@ function uploadTransaction() {
         }
     }
 }
+
+window.addEventListener('online', uploadTransaction);
